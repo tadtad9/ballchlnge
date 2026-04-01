@@ -97,7 +97,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* تعديل منطقة عرض الصور بدلاً من الكرات CSS */
         .ball-animation {
             display: flex;
             justify-content: center;
@@ -426,7 +425,7 @@
             flex-wrap: wrap;
         }
 
-        .btn-next, .btn-restart {
+        .btn-next, .btn-restart, .btn-exit {
             border: none;
             padding: 0.75rem 1.8rem;
             border-radius: 50px;
@@ -442,7 +441,7 @@
             transition: 0.1s;
         }
 
-        .btn-next:active, .btn-restart:active {
+        .btn-next:active, .btn-restart:active, .btn-exit:active {
             transform: translateY(2px);
             box-shadow: 0 2px 0 #3a2460;
         }
@@ -450,6 +449,11 @@
         .btn-restart {
             background: #334155;
             box-shadow: 0 4px 0 #1e293b;
+        }
+
+        .btn-exit {
+            background: #6b21a5;
+            box-shadow: 0 4px 0 #3e0e5e;
         }
 
         .final-message {
@@ -492,6 +496,9 @@
             }
             .question-text {
                 font-size: 1.25rem;
+            }
+            .action-buttons {
+                justify-content: center;
             }
         }
     </style>
@@ -558,6 +565,7 @@
             <div class="action-buttons">
                 <button class="btn-next" id="nextButton" style="display: none;">▶ السؤال التالي</button>
                 <button class="btn-restart" id="restartButton">🔄 إعادة اللعبة</button>
+                <button class="btn-exit" id="exitButton">🏠 الرئيسية</button>
             </div>
             <div id="finalResult"></div>
         </div>
@@ -592,6 +600,7 @@
     const optionsContainer = document.getElementById("optionsContainer");
     const nextButton = document.getElementById("nextButton");
     const restartButton = document.getElementById("restartButton");
+    const exitButton = document.getElementById("exitButton");
     const playerScoreSpan = document.getElementById("playerScore");
     const currentQNumberSpan = document.getElementById("currentQNumber");
     const totalQNumberSpan = document.getElementById("totalQNumber");
@@ -741,45 +750,64 @@
         finalResultDiv.innerHTML = "";
     }
 
-    function restartGame() {
+    // إعادة ضبط اللعبة بالكامل (إلى السؤال الأول)
+    function resetGameState() {
         currentIndex = 0;
         playerScore = 0;
         answered = false;
         gameFinished = false;
         playerScoreSpan.innerText = "0";
-        loadQuestion();
-        nextButton.style.display = "none";
-        finalResultDiv.innerHTML = "";
-        feedbackArea.innerHTML = "";
-        enableOptions(true);
-        resetButtonsStyle();
-        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        // إعادة تحميل السؤال الأول (يتم في loadQuestion)
+        loadQuestion();   // يعيد ضبط كل شيء واجهة
     }
 
-    // ========== تفعيل الانتقال من واجهة الترحيب ==========
-    const welcomeScreen = document.getElementById("welcomeScreen");
-    const gameContainer = document.getElementById("gameContainer");
-    const startBtn = document.getElementById("startGameBtn");
+    // دالة العودة إلى شاشة الترحيب
+    function returnToWelcome() {
+        // إعادة ضبط حالة اللعبة إلى البداية
+        resetGameState();
+        // إخفاء اللعبة
+        gameContainer.style.display = "none";
+        // إظهار شاشة الترحيب
+        welcomeScreen.style.display = "flex";
+        welcomeScreen.classList.remove("hide");
+        // إعادة تعيين الصوت (اختياري)
+        if (audioCtx && audioCtx.state === 'running') {
+            // لا داعي لإغلاقه، فقط نتركه
+        }
+    }
 
-    startBtn.addEventListener("click", () => {
+    // بدء اللعبة من الشاشة الترحيبية
+    function startGame() {
         initAudioContext();
         if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        // إعادة ضبط اللعبة للتأكد من بداية نظيفة
+        resetGameState();
+        // إخفاء الترحيب
         welcomeScreen.classList.add("hide");
         setTimeout(() => {
             welcomeScreen.style.display = "none";
             gameContainer.style.display = "block";
-            restartGame();
         }, 800);
-    });
+    }
 
+    // ========== ربط الأحداث ==========
+    const welcomeScreen = document.getElementById("welcomeScreen");
+    const gameContainer = document.getElementById("gameContainer");
+    const startBtn = document.getElementById("startGameBtn");
+
+    startBtn.addEventListener("click", startGame);
     nextButton.addEventListener("click", nextQuestion);
     restartButton.addEventListener("click", () => {
-        restartGame();
+        resetGameState();
         if (audioCtx && audioCtx.state === 'running') playGameSound(false);
         else if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().then(()=>playGameSound(false));
     });
+    exitButton.addEventListener("click", returnToWelcome);
 
+    // تهيئة عرض العدد الكلي
     totalQNumberSpan.innerText = totalQuestions;
+    // بدء اللعبة في الخلفية (جاهزة لكن غير مرئية)
+    resetGameState();  // يحمل السؤال الأول ولكن اللعبة مخفية، لا مشكلة
 </script>
 </body>
 </html>
