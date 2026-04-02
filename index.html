@@ -53,6 +53,7 @@
             border-radius: 3rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255, 255, 255, 0.2);
             animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
         }
 
         @keyframes fadeInUp {
@@ -64,6 +65,31 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* شعار الجهة العلوي - أصبح رابطًا */
+        .brand-header {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .brand-link {
+            color: #eaff00;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .brand-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        .brand-link span {
+            color: white;
         }
 
         .welcome-title {
@@ -197,9 +223,10 @@
 
         .game-header {
             background: #5d3c81;
-            padding: 1.5rem 2rem;
+            padding: 1.2rem 2rem;
             text-align: center;
             border-bottom: 4px solid #eaff00;
+            position: relative;
         }
 
         .game-header h1 {
@@ -207,17 +234,43 @@
             font-weight: 800;
             color: white;
             text-shadow: 2px 2px 0 #3a2460;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
 
         .game-header p {
             color: #f0f4ff;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
             background: #3a2460;
             display: inline-block;
-            padding: 0.3rem 1rem;
+            padding: 0.2rem 1rem;
             border-radius: 40px;
+            margin-top: 0.2rem;
+        }
+
+        /* علامة المجرة في رأس اللعبة - رابط */
+        .game-brand {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+            pointer-events: auto;
+        }
+        .game-brand a {
+            color: #eaff00;
+            text-decoration: none;
+        }
+        .game-brand a:hover {
+            text-decoration: underline;
+        }
+        .game-brand span {
+            color: white;
         }
 
         .game-layout {
@@ -471,7 +524,8 @@
             text-align: center;
             padding: 0.8rem;
             color: #94a3b8;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            border-top: 1px solid #334155;
         }
 
         @media (max-width: 780px) {
@@ -500,6 +554,17 @@
             .action-buttons {
                 justify-content: center;
             }
+            .game-brand {
+                position: static;
+                display: inline-block;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            .game-header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -508,6 +573,14 @@
 <!-- واجهة الترحيب -->
 <div class="welcome-screen" id="welcomeScreen">
     <div class="welcome-content">
+        <!-- رابط مجرة التعليم -->
+        <div class="brand-header">
+            ✨ بإشراف 
+            <a href="https://www.facebook.com/profile.php?id=100077412354478" target="_blank" rel="noopener noreferrer" class="brand-link">
+                <span>مجرة التعليم</span>
+            </a> 
+            ✨
+        </div>
         <div class="welcome-title">🏆 تحدي أسود الرافدين 🏆</div>
         <div class="welcome-sub">اختبار المعرفة الرياضية</div>
         <div class="ball-animation">
@@ -521,13 +594,21 @@
             <span class="teaser-item">🎧 مؤثرات صوتية</span>
         </div>
         <button class="start-btn" id="startGameBtn">ابدأ التحدي</button>
-        <p style="margin-top: 1rem; color: #eaff00; font-size: 0.8rem;">اختبر معلوماتك عن تأهل العراق إلى كأس العالم 2026</p>
+        <p style="margin-top: 1rem; color: #eaff00; font-size: 0.7rem;">اختبر معلوماتك عن تأهل العراق إلى كأس العالم 2026</p>
     </div>
 </div>
 
 <!-- لعبة الاختبار -->
 <div class="game-container" id="gameContainer">
     <div class="game-header">
+        <!-- رابط مجرة التعليم في شاشة اللعبة -->
+        <div class="game-brand">
+            ✨ 
+            <a href="https://www.facebook.com/profile.php?id=100077412354478" target="_blank" rel="noopener noreferrer">
+                <span>مجرة التعليم</span>
+            </a> 
+            ✨
+        </div>
         <h1>⚽ تحدي أسود الرافدين 🏆</h1>
         <p>العراق 2 - 1 بوليفيا | تأهل تاريخي إلى كأس العالم 2026</p>
     </div>
@@ -570,7 +651,9 @@
             <div id="finalResult"></div>
         </div>
     </div>
-    <footer>🇮🇶 10 أسئلة – اختبر معرفتك واشجع أسود الرافدين 🇮🇶</footer>
+    <footer>
+        © 2026 مجرة التعليم - جميع الحقوق محفوظة | تصميم وتطوير تجربة تفاعلية لتخليد إنجاز الأسود
+    </footer>
 </div>
 
 <script>
@@ -750,39 +833,26 @@
         finalResultDiv.innerHTML = "";
     }
 
-    // إعادة ضبط اللعبة بالكامل (إلى السؤال الأول)
     function resetGameState() {
         currentIndex = 0;
         playerScore = 0;
         answered = false;
         gameFinished = false;
         playerScoreSpan.innerText = "0";
-        // إعادة تحميل السؤال الأول (يتم في loadQuestion)
-        loadQuestion();   // يعيد ضبط كل شيء واجهة
+        loadQuestion();
     }
 
-    // دالة العودة إلى شاشة الترحيب
     function returnToWelcome() {
-        // إعادة ضبط حالة اللعبة إلى البداية
         resetGameState();
-        // إخفاء اللعبة
         gameContainer.style.display = "none";
-        // إظهار شاشة الترحيب
         welcomeScreen.style.display = "flex";
         welcomeScreen.classList.remove("hide");
-        // إعادة تعيين الصوت (اختياري)
-        if (audioCtx && audioCtx.state === 'running') {
-            // لا داعي لإغلاقه، فقط نتركه
-        }
     }
 
-    // بدء اللعبة من الشاشة الترحيبية
     function startGame() {
         initAudioContext();
         if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-        // إعادة ضبط اللعبة للتأكد من بداية نظيفة
         resetGameState();
-        // إخفاء الترحيب
         welcomeScreen.classList.add("hide");
         setTimeout(() => {
             welcomeScreen.style.display = "none";
@@ -804,10 +874,8 @@
     });
     exitButton.addEventListener("click", returnToWelcome);
 
-    // تهيئة عرض العدد الكلي
     totalQNumberSpan.innerText = totalQuestions;
-    // بدء اللعبة في الخلفية (جاهزة لكن غير مرئية)
-    resetGameState();  // يحمل السؤال الأول ولكن اللعبة مخفية، لا مشكلة
+    resetGameState(); // تجهيز اللعبة في الخلفية
 </script>
 </body>
 </html>
